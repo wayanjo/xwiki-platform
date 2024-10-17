@@ -149,7 +149,6 @@
               </differences>
             </revapi.differences>
             -->
-
             <revapi.differences>
               <differences>
                 <item>
@@ -160,8 +159,7 @@
                   <criticality>allowed</criticality>
                 </item>
               </differences>
-            </revapi.differences>
-            
+            </revapi.differences>            
           </analysisConfiguration>
         </configuration>
       </plugin>

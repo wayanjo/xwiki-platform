@@ -496,9 +496,6 @@ public class XWikiAttachment implements Cloneable
                 if (isMetaDataDirty() && doc != null) {
                     doc.setMetaDataDirty(true);
                 }
-                if (getAttachment_content() != null) {
-                    getAttachment_content().setOwnerDocument(doc);
-                }
             }
         }
     }

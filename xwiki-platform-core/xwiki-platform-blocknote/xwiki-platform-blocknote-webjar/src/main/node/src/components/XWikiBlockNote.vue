@@ -19,17 +19,15 @@
 -->
 <template>
   <div class="xwiki-blocknote">
-    <suspense>
-      <BlocknoteEditor
-        ref="editor"
-        :editor-props
-        :editor-content
-        :container
-        :realtime-server-u-r-l
-        @instant-change="dirty = true"
-        @debounced-change="updateValue"
-      ></BlocknoteEditor>
-    </suspense>
+    <BlocknoteEditor
+      ref="editor"
+      :editor-props
+      :editor-content
+      :container
+      :collaboration-provider
+      @instant-change="dirty = true"
+      @debounced-change="updateValue"
+    ></BlocknoteEditor>
     <input v-if="name" ref="valueInput" type="hidden" :name :value :form :disabled />
     <input v-if="name" type="hidden" name="RequiresConversion" :value="name" :form :disabled />
     <input v-if="name" type="hidden" :name="name + '_inputSyntax'" :value="inputSyntax" :form :disabled />
@@ -44,16 +42,23 @@ import "@mantine/core/styles.layer.css";
 import "@blocknote/core/fonts/inter.css";
 import "@blocknote/mantine/style.css";
 
-import { BlocknoteEditor } from "@xwiki/cristal-editors-blocknote-headless";
+import {
+  CollaborationInitializer,
+  CollaborationManagerProvider,
+  collaborationManagerProviderName,
+  Status,
+  User,
+} from "@xwiki/cristal-collaboration-api";
+import { BlocknoteEditor, DEFAULT_MACROS } from "@xwiki/cristal-editors-blocknote-headless";
 import { EditorLanguage } from "@xwiki/cristal-editors-blocknote-react";
 import {
+  createConverterContext,
   MarkdownToUniAstConverter,
   UniAst,
   UniAstToMarkdownConverter,
-  createConverterContext,
 } from "@xwiki/cristal-uniast";
 import { Container } from "inversify";
-import { computed, inject, ref, shallowRef, useTemplateRef } from "vue";
+import { inject, ref, Ref, shallowRef, useTemplateRef } from "vue";
 import { Logic } from "../services/Logic";
 
 //
@@ -65,14 +70,7 @@ const container = inject<Container>("container")!;
 //
 // Props
 //
-const {
-  name = undefined,
-  initialValue = "",
-  form = undefined,
-  disabled = false,
-  inputSyntax = "markdown/1.2",
-  outputSyntax = "xwiki/2.1",
-} = defineProps<{
+export type XWikiBlockNoteProps = {
   // The key used to submit the edited content.
   name?: string;
 
@@ -90,7 +88,16 @@ const {
 
   // The syntax of the edited content, as expected by the back-end storage.
   outputSyntax?: string;
-}>();
+};
+
+const {
+  name = undefined,
+  initialValue = "",
+  form = undefined,
+  disabled = false,
+  inputSyntax = "markdown/1.2",
+  outputSyntax = "xwiki/2.1",
+} = defineProps<XWikiBlockNoteProps>();
 
 //
 // Data
@@ -100,7 +107,7 @@ const dirty = ref(false);
 
 const converterContext = createConverterContext(container);
 const markdownToUniAst = new MarkdownToUniAstConverter(converterContext);
-const uniAstToMarkdown = new UniAstToMarkdownConverter(converterContext);
+const uniAstToMarkdown = new UniAstToMarkdownConverter();
 
 const editorContent = shallowRef<UniAst | Error>(markdownToUniAst.parseMarkdown(initialValue));
 const editorProps = shallowRef<InstanceType<typeof BlocknoteEditor>["$props"]["editorProps"]>({
@@ -111,6 +118,7 @@ const editorProps = shallowRef<InstanceType<typeof BlocknoteEditor>["$props"]["e
   },
   theme: "light",
   lang: getLanguage(),
+  macros: Object.values(DEFAULT_MACROS),
 });
 
 //
@@ -118,9 +126,6 @@ const editorProps = shallowRef<InstanceType<typeof BlocknoteEditor>["$props"]["e
 //
 const valueInput = useTemplateRef<HTMLInputElement>("valueInput");
 const editorInstance = useTemplateRef<InstanceType<typeof BlocknoteEditor>>("editor");
-const realtimeServerURL = computed(() => {
-  return logic.realtimeServerURL;
-});
 
 //
 // Methods
@@ -162,6 +167,23 @@ function getLanguage(): EditorLanguage {
 defineExpose({
   updateValue,
 });
+
+//
+// Async setup
+//
+let collaborationProvider: () => CollaborationInitializer;
+// @ts-expect-error TS6133: Placeholder for future realtime status usage.
+let status: Ref<Status> | undefined;
+// @ts-expect-error TS6133: Placeholder for future realtime users usage.
+let users: Ref<User[]> | undefined;
+if (logic.realtimeServerURL) {
+  const collaborationManager = container.get<CollaborationManagerProvider>(collaborationManagerProviderName).get();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  status = collaborationManager.status();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  users = collaborationManager.users();
+  collaborationProvider = await collaborationManager.get();
+}
 </script>
 
 <style>

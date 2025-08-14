@@ -21,7 +21,7 @@ import type { SkinManager } from "@xwiki/cristal-api";
 import { createPinia } from "pinia";
 import { App, createApp, reactive } from "vue";
 import { createI18n, I18n } from "vue-i18n";
-import XWikiBlockNote from "../components/XWikiBlockNote.vue";
+import XWikiBlockNoteWrapper from "../components/XWikiBlockNoteWrapper.vue";
 import { container } from "./container";
 import { i18nResolver } from "./i18nResolver";
 
@@ -42,7 +42,7 @@ export class Logic {
   private _resolveReady?: (logic: Logic) => void;
   private readonly _i18nPromise: Promise<I18n>;
   private readonly _vueApp: App;
-  private readonly _root: InstanceType<typeof XWikiBlockNote>;
+  private readonly _root: InstanceType<typeof XWikiBlockNoteWrapper>;
 
   constructor(host: HTMLElement) {
     this._host = host;
@@ -61,7 +61,7 @@ export class Logic {
 
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const logic = this;
-    this._vueApp = createApp(XWikiBlockNote, this._data)
+    this._vueApp = createApp(XWikiBlockNoteWrapper, this._data)
       .mixin({
         mounted() {
           host.classList.remove("loading");
@@ -75,7 +75,7 @@ export class Logic {
 
     skinManager.loadDesignSystem(this._vueApp, container);
 
-    this._root = this._vueApp.mount(host) as InstanceType<typeof XWikiBlockNote>;
+    this._root = this._vueApp.mount(host) as InstanceType<typeof XWikiBlockNoteWrapper>;
   }
 
   /**

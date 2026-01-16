@@ -133,30 +133,23 @@
         </configuration>
       </plugin>
 
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-enforcer-plugin</artifactId>
-            <version>3.6.2</version>
-            <configuration>
-                <skip>true</skip>
-                <skipRules>true</skipRules>
-                <fail>false</fail>
-                <failFast>false</failFast>
-            </configuration>
-            <executions>
-                <execution>
-                    <id>enforce-valid-poms</id>
-                    <phase>none</phase>
-                    <goals>
-                        <goal>none</goal>
-                    </goals>
-                </execution>
-                <execution>
-                    <id>default</id>
-                    <phase>never</phase>
-                </execution>
-            </executions>
-        </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-plugin-plugin</artifactId>
+        <version>3.12.0</version> <!-- Use a recent stable version -->
+        <executions>
+          <execution>
+            <id>default-descriptor</id>
+            <goals>
+              <goal>descriptor</goal>
+            </goals>
+            <phase>process-classes</phase>
+          </execution>
+        </executions>
+        <configuration>
+          <goalPrefix>xwiki-xmldoc-update</goalPrefix>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
   <profiles>

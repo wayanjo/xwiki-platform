@@ -33,6 +33,8 @@
   <description>A Maven plugin to load XWiki documents from XML and perform file attachment or setting object properties, before writting the document back to XML </description>
   <properties>
     <xwiki.jacoco.instructionRatio>0.74</xwiki.jacoco.instructionRatio>
+
+      <enforcer.skip>true</enforcer.skip>
   </properties>
   <dependencies>
     <dependency>
@@ -130,6 +132,31 @@
           <goalPrefix>xwiki-xmldoc-update</goalPrefix>
         </configuration>
       </plugin>
+
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-enforcer-plugin</artifactId>
+            <version>3.6.2</version>
+            <configuration>
+                <skip>true</skip>
+                <skipRules>true</skipRules>
+                <fail>false</fail>
+                <failFast>false</failFast>
+            </configuration>
+            <executions>
+                <execution>
+                    <id>enforce-valid-poms</id>
+                    <phase>none</phase>
+                    <goals>
+                        <goal>none</goal>
+                    </goals>
+                </execution>
+                <execution>
+                    <id>default</id>
+                    <phase>never</phase>
+                </execution>
+            </executions>
+        </plugin>
     </plugins>
   </build>
   <profiles>

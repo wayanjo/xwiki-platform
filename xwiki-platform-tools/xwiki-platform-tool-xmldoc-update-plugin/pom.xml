@@ -33,8 +33,6 @@
   <description>A Maven plugin to load XWiki documents from XML and perform file attachment or setting object properties, before writting the document back to XML </description>
   <properties>
     <xwiki.jacoco.instructionRatio>0.74</xwiki.jacoco.instructionRatio>
-
-      <enforcer.skip>true</enforcer.skip>
   </properties>
   <dependencies>
     <dependency>
@@ -128,24 +126,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-plugin-plugin</artifactId>
-        <configuration>
-          <goalPrefix>xwiki-xmldoc-update</goalPrefix>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-plugin-plugin</artifactId>
-        <version>3.12.0</version> <!-- Use a recent stable version -->
-        <executions>
-          <execution>
-            <id>default-descriptor</id>
-            <goals>
-              <goal>descriptor</goal>
-            </goals>
-            <phase>process-classes</phase>
-          </execution>
-        </executions>
         <configuration>
           <goalPrefix>xwiki-xmldoc-update</goalPrefix>
         </configuration>

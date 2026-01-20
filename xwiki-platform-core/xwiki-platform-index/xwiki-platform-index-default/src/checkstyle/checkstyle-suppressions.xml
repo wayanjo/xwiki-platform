@@ -26,5 +26,5 @@
 
 <suppressions>
   <!-- FanOut complexity of 22 on a max of 20 -->
-  <suppress checks="ClassFanOutComplexity" files="src/main/java/org/xwiki/index/internal/DefaultTasksManager\.java"/>
+  <suppress checks="ClassFanOutComplexity" files="DefaultTasksManager.java"/>
 </suppressions>

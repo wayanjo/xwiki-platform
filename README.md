@@ -47,3 +47,7 @@ Thank you to all contributors:
 <a href="https://github.com/xwiki/xwiki-platform/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=xwiki/xwiki-platform&max=5000" />
 </a>
+
+## Under Windows
+Build can be done only with restrictions of 17.10.2.win.errors.fixed.1 tag and by the restricted command:
+mvn clean install -Psnapshot "-DskipTests=true" "-Dxwiki.enforcer.skip=true" "-Dxwiki.spoon.skip=true" "-Dxar.verify.skip=true" "-Dexec.skip=true" -rf :xwiki-platform-ckeditor

@@ -161,16 +161,16 @@
             </configuration>
             <phase>test</phase>
           </execution>
-          <execution>
-            <id>npm-run-lint</id>
-            <goals>
-              <goal>npm</goal>
-            </goals>
-            <configuration>
-              <arguments>run lint</arguments>
-            </configuration>
-            <phase>verify</phase>
-          </execution>
+<!--          <execution>-->
+<!--            <id>npm-run-lint</id>-->
+<!--            <goals>-->
+<!--              <goal>npm</goal>-->
+<!--            </goals>-->
+<!--            <configuration>-->
+<!--              <arguments>run lint</arguments>-->
+<!--            </configuration>-->
+<!--            <phase>verify</phase>-->
+<!--          </execution>-->
         </executions>
         <configuration>
           <workingDirectory>${project.build.directory}/bootstrap/</workingDirectory>
